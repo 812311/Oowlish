@@ -32,10 +32,12 @@ export default class Main extends Component {
     const countPages = localStorage.getItem('countPages');
     const user = localStorage.getItem('user');
     if (repositories) {
-      this.setState({ repositories: JSON.parse(repositories) });
-      this.setState({ pageNumber: JSON.parse(pageNumber) });
-      this.setState({ countPages: JSON.parse(countPages) });
-      this.setState({ user: JSON.parse(user) });
+      this.setState({
+        repositories: JSON.parse(repositories),
+        pageNumber: JSON.parse(pageNumber),
+        countPages: JSON.parse(countPages),
+        user: JSON.parse(user),
+      });
     }
   }
 
@@ -44,8 +46,7 @@ export default class Main extends Component {
    * users repositories displayed already saved from previous search.
    * */
   componentDidUpdate(_, prevState) {
-    const {
- repositories, pageNumber, countPages, user
+    const { repositories, pageNumber, countPages, user
 } = this.state;
     if (prevState.repositories !== repositories) {
       localStorage.setItem('repositories', JSON.stringify(repositories));
@@ -94,10 +95,13 @@ export default class Main extends Component {
   handleSubmit = async (e, value = 1) => {
     e.preventDefault();
     const { user } = this.state;
-    this.setState({ error: '' });
+    let message = '';
 
     if (user) {
-      this.setState({ load: true });
+      this.setState({
+        load: true,
+        error: message,
+      });
       await api
         .post(
           '/search-repos',
@@ -108,7 +112,7 @@ export default class Main extends Component {
             params: {
               page: value,
             },
-          },
+          }
         )
         .then((res) => {
           this.setState({
@@ -121,16 +125,17 @@ export default class Main extends Component {
         })
         .catch((err) => {
           if (err.response) {
-            this.setState({ error: 'Make sure you typed the correct user.' });
+            message = 'Make sure you typed the correct user.';
           } else if (err.request) {
-            this.setState({ error: 'Make sure you have internet connection.' });
+            message = 'Make sure you have internet connection.';
           } else {
-            this.setState({
-              error:
-                'We could not make this happen. Check for problems or try again later.',
-            });
+            message =
+              'We could not make this happen. Check for problems or try again later.';
           }
-          this.setState({ load: false });
+          this.setState({
+            error: message,
+            load: false,
+          });
         });
     } else {
       this.setState({ error: 'Enter the username.' });
