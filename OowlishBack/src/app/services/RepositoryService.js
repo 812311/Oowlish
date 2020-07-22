@@ -49,7 +49,7 @@ class RepositoryService {
 
       // Calculates the first and last index from the array of repos result
       const baseIndex = (Math.abs(page) - 1) * Math.abs(per_page);
-      const lastIndex = Math.abs(page) * Math.abs(per_page);
+      const lastIndex = baseIndex + per_page;
 
       if (repos.data.length !== 0) {
         return {

@@ -16,13 +16,13 @@ describe('Executing tests for repository service', () => {
   });
 
   describe('Executing tests for searchRepos method', () => {
-    it('Should be return error if username were not given', async () => {
+    it('Should return an error if the username was not given', async () => {
       const response = await RepositoryService.searchRepos({});
       expect(response.status).toBe(400);
       expect(response.body).toHaveProperty('error');
     });
 
-    it('Should be return error if page is not a number', async () => {
+    it('Should return error if page is not a number', async () => {
       const response = await RepositoryService.searchRepos(
         { username: 'fakeuser' },
         { page: 'a' }
@@ -31,7 +31,7 @@ describe('Executing tests for repository service', () => {
       expect(response.body).toHaveProperty('error');
     });
 
-    it('Should be return error if user was not found on Github', async () => {
+    it('Should return error if user was not found on Github', async () => {
       mock.onGet(/\/users\/\w+\/repos/).reply(404, {});
 
       const response = await RepositoryService.searchRepos({
@@ -42,7 +42,7 @@ describe('Executing tests for repository service', () => {
       expect(response.body).toHaveProperty('error');
     });
 
-    it('Should be return error if something happens at request', async () => {
+    it('Should return error if something happens at the request', async () => {
       mock.onGet(/\/users\/\w+\/repos/).reply(500, {});
 
       const response = await RepositoryService.searchRepos({
@@ -53,7 +53,7 @@ describe('Executing tests for repository service', () => {
       expect(response.body).toHaveProperty('error');
     });
 
-    it('Should be return success and fetch results', async () => {
+    it('Should return success and fetch the results', async () => {
       mock.onGet(/\/users\/\w+\/repos/).reply(200, [{ name: 'repotest' }]);
 
       const response = await RepositoryService.searchRepos({
@@ -66,13 +66,13 @@ describe('Executing tests for repository service', () => {
   });
 
   describe('Executing tests for detail method', () => {
-    it('Should be return error if reponame were not given', async () => {
+    it('Should return error if the reponame was not given', async () => {
       const response = await RepositoryService.detailRepo({});
       expect(response.status).toBe(400);
       expect(response.body).toHaveProperty('error');
     });
 
-    it('Should be return error if repository was not found on Github', async () => {
+    it('Should return error if repository was not found on Github', async () => {
       mock.onGet(/\/repos\/\w+/).reply(404, {});
 
       const response = await RepositoryService.detailRepo({
@@ -83,7 +83,7 @@ describe('Executing tests for repository service', () => {
       expect(response.body).toHaveProperty('error');
     });
 
-    it('Should be return error if something happens at request', async () => {
+    it('Should return error if something wrong happens with the request', async () => {
       mock.onGet(/\/repos\/\w+/).reply(500, {});
 
       const response = await RepositoryService.detailRepo({
@@ -94,7 +94,7 @@ describe('Executing tests for repository service', () => {
       expect(response.body).toHaveProperty('error');
     });
 
-    it('Should be return success and fetch result', async () => {
+    it('Should return success and fetch the result', async () => {
       mock.onGet(/\/repos\/\w+/).reply(200, { data: [] });
 
       const response = await RepositoryService.detailRepo({
