@@ -46,9 +46,10 @@ export default class Main extends Component {
    * users repositories displayed already saved from previous search.
    * */
   componentDidUpdate(_, prevState) {
-    const { repositories, pageNumber, countPages, user
+    const {
+ repositories, pageNumber, countPages, user
 } = this.state;
-    if (prevState.repositories !== repositories) {
+    if (prevState.repositories !== repositories && repositories) {
       localStorage.setItem('repositories', JSON.stringify(repositories));
       localStorage.setItem('pageNumber', JSON.stringify(pageNumber));
       localStorage.setItem('countPages', JSON.stringify(countPages));
@@ -112,7 +113,7 @@ export default class Main extends Component {
             params: {
               page: value,
             },
-          }
+          },
         )
         .then((res) => {
           this.setState({
@@ -129,8 +130,7 @@ export default class Main extends Component {
           } else if (err.request) {
             message = 'Make sure you have internet connection.';
           } else {
-            message =
-              'We could not make this happen. Check for problems or try again later.';
+            message =              'We could not make this happen. Check for problems or try again later.';
           }
           this.setState({
             error: message,
@@ -178,14 +178,18 @@ export default class Main extends Component {
         {error && <Error>{error}</Error>}
         <List>
           {/* Uses array map to list the repositories on the screen */}
-          {repositories.map((repo) => (
-            <li key={repo.full_name}>
-              <span>{repo.full_name}</span>
-              <Link to={`/repository/${encodeURIComponent(repo.full_name)}`}>
-                Details
-              </Link>
-            </li>
-          ))}
+          {repositories ? (
+            repositories.map((repo) => (
+              <li key={repo.full_name}>
+                <span>{repo.full_name}</span>
+                <Link to={`/repository/${encodeURIComponent(repo.full_name)}`}>
+                  Details
+                </Link>
+              </li>
+            ))
+          ) : (
+            <Error>There are no repositories in this account</Error>
+          )}
         </List>
         {countPages && (
           <Pagination
